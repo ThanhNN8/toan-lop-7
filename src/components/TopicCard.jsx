@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
 
-function TopicCard({ topic }) {
+function TopicCard({ topic, basePath = '' }) {
   return (
-    <Link to={`/topic/${topic.id}`} className="topic-card">
+    <Link to={`${basePath}/topic/${topic.id}`} className="topic-card">
       <div className="topic-icon">{topic.icon}</div>
       <div className="topic-info">
         <span className="topic-category-badge">{topic.categoryName}</span>

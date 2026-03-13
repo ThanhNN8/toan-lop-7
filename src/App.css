@@ -109,6 +109,35 @@ a {
   color: white;
 }
 
+/* ===== SUBJECT TABS ===== */
+.subject-tabs {
+  display: flex;
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: var(--radius-sm);
+  padding: 3px;
+}
+
+.subject-tab {
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.subject-tab:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.subject-tab.active {
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+}
+
 /* ===== HERO ===== */
 .hero {
   background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -1626,5 +1655,15 @@ a {
 
   .header-right {
     gap: 8px;
+  }
+
+  .subject-tabs {
+    gap: 2px;
+    padding: 2px;
+  }
+
+  .subject-tab {
+    padding: 4px 8px;
+    font-size: 0.75rem;
   }
 }

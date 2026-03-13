@@ -3,18 +3,19 @@ import { useState } from 'react'
 import ExerciseCard from '../components/ExerciseCard'
 import QuizGame from '../components/QuizGame'
 import EssayExercise from '../components/EssayExercise'
-import topics from '../data/topics'
+import useSubject from '../hooks/useSubject'
 
 function TopicDetail() {
+  const subject = useSubject()
   const { id } = useParams()
-  const topic = topics.find(t => t.id === Number(id))
+  const topic = subject.topics.find(t => t.id === Number(id))
   const [mode, setMode] = useState('theory') // theory | essay | quiz
 
   if (!topic) {
     return (
       <div className="not-found">
         <h2>Không tìm thấy chủ đề</h2>
-        <Link to="/" className="btn-back">← Về trang chủ</Link>
+        <Link to={subject.basePath || '/'} className="btn-back">← Về trang chủ</Link>
       </div>
     )
   }
@@ -22,7 +23,7 @@ function TopicDetail() {
   return (
     <div className="topic-detail">
       <div className="topic-detail-header">
-        <Link to="/" className="btn-back">← Quay lại</Link>
+        <Link to={subject.basePath || '/'} className="btn-back">← Quay lại</Link>
         <div className="topic-detail-title">
           <span className="topic-detail-icon">{topic.icon}</span>
           <div>

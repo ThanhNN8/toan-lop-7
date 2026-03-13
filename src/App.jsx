@@ -14,6 +14,9 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/topic/:id" element={<TopicDetail />} />
           <Route path="/game" element={<Game />} />
+          <Route path="/khtn7" element={<Home />} />
+          <Route path="/khtn7/topic/:id" element={<TopicDetail />} />
+          <Route path="/khtn7/game" element={<Game />} />
         </Routes>
       </main>
       <Footer />

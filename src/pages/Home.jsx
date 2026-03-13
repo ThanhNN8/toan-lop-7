@@ -1,39 +1,33 @@
 import { useState } from 'react'
 import TopicCard from '../components/TopicCard'
-import topics from '../data/topics'
-
-const categories = [
-  { key: 'all', label: 'Tất cả' },
-  { key: 'dai-so', label: 'Đại số' },
-  { key: 'hinh-hoc', label: 'Hình học' },
-  { key: 'thong-ke', label: 'Thống kê & Xác suất' },
-]
+import useSubject from '../hooks/useSubject'
 
 function Home() {
+  const subject = useSubject()
   const [activeCategory, setActiveCategory] = useState('all')
 
   const filteredTopics = activeCategory === 'all'
-    ? topics
-    : topics.filter(t => t.category === activeCategory)
+    ? subject.topics
+    : subject.topics.filter(t => t.category === activeCategory)
 
   return (
     <div className="home">
       <section className="hero">
         <div className="hero-content">
-          <h1>Toán Lớp 7</h1>
-          <h2>Chân Trời Sáng Tạo</h2>
-          <p>Ôn tập kiến thức qua lý thuyết, bài tập mẫu và trò chơi tương tác</p>
+          <h1>{subject.heroTitle}</h1>
+          <h2>{subject.heroSubtitle}</h2>
+          <p>{subject.heroDesc}</p>
           <div className="hero-stats">
             <div className="stat">
-              <span className="stat-number">10</span>
+              <span className="stat-number">{subject.topics.length}</span>
               <span className="stat-label">Chủ đề</span>
             </div>
             <div className="stat">
-              <span className="stat-number">{topics.reduce((s, t) => s + t.exercises.length, 0)}</span>
+              <span className="stat-number">{subject.topics.reduce((s, t) => s + t.exercises.length, 0)}</span>
               <span className="stat-label">Bài tập</span>
             </div>
             <div className="stat">
-              <span className="stat-number">{topics.reduce((s, t) => s + t.quizzes.length, 0)}</span>
+              <span className="stat-number">{subject.topics.reduce((s, t) => s + t.quizzes.length, 0)}</span>
               <span className="stat-label">Câu hỏi</span>
             </div>
           </div>
@@ -42,7 +36,7 @@ function Home() {
 
       <section className="topics-section">
         <div className="category-filter">
-          {categories.map(cat => (
+          {subject.categories.map(cat => (
             <button
               key={cat.key}
               className={`filter-btn ${activeCategory === cat.key ? 'active' : ''}`}
@@ -55,7 +49,7 @@ function Home() {
 
         <div className="topics-grid">
           {filteredTopics.map(topic => (
-            <TopicCard key={topic.id} topic={topic} />
+            <TopicCard key={topic.id} topic={topic} basePath={subject.basePath} />
           ))}
         </div>
       </section>

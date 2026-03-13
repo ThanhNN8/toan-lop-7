@@ -3,7 +3,7 @@ import QuizGame from '../components/QuizGame'
 import EssayExercise from '../components/EssayExercise'
 import GameCharacter from '../components/GameCharacter'
 import { useCoins } from '../context/CoinContext'
-import topics from '../data/topics'
+import useSubject from '../hooks/useSubject'
 
 function shuffleArray(arr) {
   const shuffled = [...arr]
@@ -15,6 +15,8 @@ function shuffleArray(arr) {
 }
 
 function Game() {
+  const subject = useSubject()
+  const topics = subject.topics
   const { coins, bestStreak, totalCorrect } = useCoins()
   const [selectedTopic, setSelectedTopic] = useState('all')
   const [gameMode, setGameMode] = useState('quiz') // quiz | essay
@@ -37,7 +39,7 @@ function Game() {
       setEssays(selectedTopic === 'all' ? shuffled.slice(0, 10) : shuffled)
     }
     setStarted(true)
-  }, [selectedTopic, gameMode])
+  }, [selectedTopic, gameMode, topics])
 
   if (!started) {
     return (
