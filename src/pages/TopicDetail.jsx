@@ -1,15 +1,22 @@
 import { useParams, Link } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import ExerciseCard from '../components/ExerciseCard'
 import QuizGame from '../components/QuizGame'
 import EssayExercise from '../components/EssayExercise'
 import useSubject from '../hooks/useSubject'
+import useSpeech from '../hooks/useSpeech'
 
 function TopicDetail() {
   const subject = useSubject()
   const { id } = useParams()
   const topic = subject.topics.find(t => t.id === Number(id))
   const [mode, setMode] = useState('theory') // theory | essay | quiz
+  const { speak, stop, isSpeaking, speakingText } = useSpeech()
+
+  // Stop speech when changing mode or topic
+  useEffect(() => {
+    stop()
+  }, [mode, id, stop])
 
   if (!topic) {
     return (
@@ -19,6 +26,10 @@ function TopicDetail() {
       </div>
     )
   }
+
+  const allTheoryText = topic.theory.map(item => item.title + '. ' + item.content).join('. ')
+
+  const isReadingAll = isSpeaking && speakingText === allTheoryText
 
   return (
     <div className="topic-detail">
@@ -57,20 +68,42 @@ function TopicDetail() {
 
       {mode === 'theory' && (
         <div className="theory-section">
-          <h2>Tóm tắt lý thuyết</h2>
+          <div className="theory-section-header">
+            <h2>Tóm tắt lý thuyết</h2>
+            <button
+              className={`btn-speak ${isReadingAll ? 'active' : ''}`}
+              onClick={() => speak(allTheoryText)}
+              title={isReadingAll ? 'Dừng đọc' : 'Đọc tất cả lý thuyết'}
+            >
+              {isReadingAll ? '⏹ Dừng đọc' : '🔊 Đọc tất cả'}
+            </button>
+          </div>
           <div className="theory-cards">
-            {topic.theory.map((item, i) => (
-              <div key={i} className="theory-card">
-                <h3>{item.title}</h3>
-                <p>{item.content}</p>
-              </div>
-            ))}
+            {topic.theory.map((item, i) => {
+              const cardText = item.title + '. ' + item.content
+              const isReadingThis = isSpeaking && speakingText === cardText
+              return (
+                <div key={i} className={`theory-card ${isReadingThis ? 'speaking' : ''}`}>
+                  <div className="theory-card-header">
+                    <h3>{item.title}</h3>
+                    <button
+                      className={`btn-speak btn-speak-sm ${isReadingThis ? 'active' : ''}`}
+                      onClick={() => speak(cardText)}
+                      title={isReadingThis ? 'Dừng đọc' : 'Đọc nội dung này'}
+                    >
+                      {isReadingThis ? '⏹' : '🔊'}
+                    </button>
+                  </div>
+                  <p>{item.content}</p>
+                </div>
+              )
+            })}
           </div>
 
           <h2>Bài tập mẫu</h2>
           <div className="exercises-list">
             {topic.exercises.map((ex, i) => (
-              <ExerciseCard key={i} exercise={ex} index={i} />
+              <ExerciseCard key={i} exercise={ex} index={i} speak={speak} isSpeaking={isSpeaking} speakingText={speakingText} />
             ))}
           </div>
         </div>
